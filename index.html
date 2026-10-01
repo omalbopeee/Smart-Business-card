@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#172729" />
+    <title>Your digital business card</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="card">
+      <div class="portrait" id="portrait">
+        <div class="portrait-art" aria-hidden="true">
+          <span class="orbit orbit-one"></span
+          ><span class="orbit orbit-two"></span
+          ><span class="monogram" id="monogram">YN</span>
+        </div>
+      </div>
+      <div class="shade"></div>
+      <header>
+        <a class="brand" href="#" aria-label="Back to profile"
+          ><span id="brand">YOUR BRAND</span
+          ><svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            aria-hidden="true"
+          >
+            <path
+              d="M8 9a5 5 0 0 1 0 6M12 6a9 9 0 0 1 0 12M16 3a13 13 0 0 1 0 18"
+            /></svg></a
+        ><button
+          class="share-top"
+          id="share-top"
+          aria-label="Share profile"
+        ></button>
+      </header>
+      <div class="demo-tag">DEMO PROFILE</div>
+      <aside class="socials" id="socials" aria-label="Social links"></aside>
+      <section class="intro">
+        <p class="eyebrow">LET'S CONNECT</p>
+        <h1 id="name">Your name</h1>
+        <p class="role" id="role">Your title - Your company</p>
+        <p class="bio" id="bio">
+          A little about you, what you do, and the connections you'd love to
+          make.
+        </p>
+        <button class="open-contact" id="open-contact" aria-haspopup="dialog">
+          <span>Explore my card</span><span class="arrow">&#8593;</span>
+        </button>
+      </section>
+      <div class="bottom-note">
+        <span>DIGITAL BUSINESS CARD</span><span>A better way to connect.</span>
+      </div>
+    </main>
+    <dialog id="contact-dialog" aria-labelledby="panel-title">
+      <div class="sheet">
+        <div class="handle"></div>
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">KEEP IN TOUCH</p>
+            <h2 id="panel-title">Let's connect.</h2>
+          </div>
+          <button
+            id="close-contact"
+            class="close"
+            aria-label="Close contact details"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="actions">
+          <button id="save-contact">
+            <span data-icon="download"></span>Save contact</button
+          ><button id="connect"><span data-icon="chat"></span>Connect</button
+          ><button id="share"><span data-icon="share"></span>Share</button>
+        </div>
+        <div class="contact-list" id="contact-list"></div>
+        <div class="tabs" role="tablist" aria-label="Profile information">
+          <button
+            role="tab"
+            id="tab-about"
+            aria-controls="about"
+            aria-selected="true"
+          >
+            About</button
+          ><button
+            role="tab"
+            id="tab-company"
+            aria-controls="company"
+            aria-selected="false"
+            tabindex="-1"
+          >
+            Company</button
+          ><button
+            role="tab"
+            id="tab-gallery"
+            aria-controls="gallery"
+            aria-selected="false"
+            tabindex="-1"
+          >
+            Gallery
+          </button>
+        </div>
+        <section
+          class="tab-content"
+          role="tabpanel"
+          id="about"
+          aria-labelledby="tab-about"
+        ></section>
+        <section
+          class="tab-content"
+          role="tabpanel"
+          id="company"
+          aria-labelledby="tab-company"
+          hidden
+        ></section>
+        <section
+          class="tab-content gallery"
+          role="tabpanel"
+          id="gallery"
+          aria-labelledby="tab-gallery"
+          hidden
+        ></section>
+        <p class="sheet-footer">One card. Every connection.</p>
+      </div>
+    </dialog>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="profile.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
+
