@@ -62,7 +62,13 @@ a {
 }
 
 .shade {
-  background: linear-gradient( 180deg, #08152a11 5%, transparent 35%, #07142999 61%, #071429 100% );
+  background: linear-gradient(
+    180deg,
+    #08152a11 5%,
+    transparent 35%,
+    #07142999 61%,
+    #071429 100%
+  );
 }
 
 header {
@@ -281,7 +287,9 @@ dialog::backdrop {
 }
 
 h2 {
-  font: 32px Georgia, serif;
+  font:
+    32px Georgia,
+    serif;
   letter-spacing: -0.6px;
   margin: 0;
 }
