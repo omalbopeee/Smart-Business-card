@@ -4,7 +4,7 @@ window.PROFILE = {
   company: "Tapx (Pvt) Ltd",
   bio: "Making introductions simple and connections meaningful. Let's build something together.",
   about:
-    "Hi, I'm Omal, Co-Founder of Tapx (Pvt) Ltd. I believe a great connection can be the start of something extraordinary. I'm here to share ideas, explore collaborations, and make it easier to stay in touch.",
+    "Hi, I'm Omal, a BSc (Hons) AI undergraduate at the University of Moratuwa and Co-Founder of Tapx (Pvt) Ltd. I believe a great connection can be the start of something extraordinary. I'm here to share ideas, explore collaborations, and make it easier to stay in touch.",
   companyDescription:
     "Tapx (Pvt) Ltd.\nLet's connect to learn more about our work and explore opportunities together.",
   phone: "+94762199292",
