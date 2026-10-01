@@ -44,15 +44,9 @@ $("role").textContent =
 $("bio").textContent =
   p.bio || "A little about you and the connections you'd love to make.";
 $("brand").textContent = p.company ? "tapx" : "YOUR BRAND";
-$("monogram").textContent = (p.name || "Your Name")
-  .split(/\s+/)
-  .map((n) => n[0])
-  .slice(0, 2)
-  .join("");
 document.title = `${p.name || "Your profile"} | Digital business card`;
 if (p.portrait) {
   $("portrait").style.backgroundImage = `url(${JSON.stringify(p.portrait)})`;
-  $("portrait").replaceChildren();
 }
 if (p.logo) {
   const logo = new Image();
@@ -66,20 +60,15 @@ document
   .forEach((el) => (el.innerHTML = icon(el.dataset.icon)));
 for (const [name, url] of Object.entries(p.socials)) {
   const href = safeUrl(url);
-  const el = document.createElement(href ? "a" : "button");
-  el.innerHTML = icon(name);
-  el.setAttribute("aria-label", href ? name : `${name} - link coming soon`);
-  el.title = href ? name : `${name} - coming soon`;
-  if (href) {
-    el.href = href;
-    el.target = "_blank";
-    el.rel = "noopener noreferrer";
-  } else {
-    el.addEventListener("click", () =>
-      toast(`${name[0].toUpperCase() + name.slice(1)} link coming soon.`),
-    );
-  }
-  $("socials").append(el);
+  if (!href) continue;
+  const link = document.createElement("a");
+  link.innerHTML = icon(name);
+  link.setAttribute("aria-label", name);
+  link.title = name;
+  link.href = href;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  $("socials").append(link);
 }
 const digits = (value) => value.replace(/[^\d]/g, "");
 function row(label, value, type, href) {
