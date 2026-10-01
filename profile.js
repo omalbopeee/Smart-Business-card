@@ -16,7 +16,11 @@ window.PROFILE = {
   portrait: "assets/omal-bopage.png",
   logo: "",
   accent: "#ee394b",
-  socials: { facebook: "", instagram: "", tiktok: "" },
+  socials: {
+    facebook: "https://www.facebook.com/share/1KTcXatjhG/?mibextid=wwXIfr",
+    instagram: "https://www.instagram.com/_omal__bopeee_/",
+    tiktok: "https://www.tiktok.com/@omal_bopeeeee",
+  },
   gallery: [],
 };
 
