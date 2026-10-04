@@ -402,6 +402,7 @@ dialog {
   color: var(--ink);
   box-shadow: 0 -15px 80px #061e3f33;
   overscroll-behavior: contain;
+  touch-action: pan-y pinch-zoom;
   transform: translateY(var(--sheet-distance));
   transition: transform 0.22s ease-out;
 }
@@ -412,6 +413,16 @@ dialog[open] {
 
 dialog.is-dragging {
   transition: none;
+}
+
+dialog.is-scrolled {
+  touch-action: auto;
+}
+
+@supports (touch-action: pan-x pan-down pinch-zoom) {
+  dialog:not(.is-scrolled) {
+    touch-action: pan-x pan-down pinch-zoom;
+  }
 }
 
 dialog::backdrop {

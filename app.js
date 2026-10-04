@@ -4,6 +4,7 @@ const paths = {
   share: '<path d="M12 16V3m-5 5 5-5 5 5M5 13v7h14v-7"/>',
   download: '<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',
   chat: '<path d="M21 11.5a9 9 0 0 1-9 9 10 10 0 0 1-4-.9L3 21l1.4-4.7A9 9 0 1 1 21 11.5Z"/><path d="M8 11h8m-8 4h5"/>',
+  whatsapp: '<path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.5L3 20.5l1.3-4.8a8.5 8.5 0 1 1 16.2-4Z"/><path d="m8.2 7.2 1.4 2.7-1.2 1.1a8.5 8.5 0 0 0 4.6 4.6l1.1-1.2 2.7 1.4c-.2 1.1-1 1.7-2.1 1.7-4.2-.3-8.3-4.4-8.6-8.6 0-1.1.6-1.9 1.7-2.1Z"/>',
   phone: '<path d="m7 3 3 5-3 2a14 14 0 0 0 7 7l2-3 5 3-1 4C11 23 1 13 3 4Z"/>',
   email:
     '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/>',
@@ -165,6 +166,8 @@ openContact.setAttribute("aria-expanded", "false");
 function openDetails() {
   if (dialog.open) return;
   dialog.showModal();
+  dialog.scrollTop = 0;
+  updateSheetScrollPosition();
   openContact.setAttribute("aria-expanded", "true");
   $("close-contact").focus({ preventScroll: true });
 }
@@ -225,7 +228,7 @@ function verticalSwipe(surface, { direction, canStart, onProgress, onCommit }) {
     if (
       event.isPrimary === false ||
       (event.pointerType === "mouse" && event.button !== 0) ||
-      (canStart && !canStart(event.target))
+      (canStart && !canStart(event.target, event))
     )
       return;
     gesture = {
@@ -326,21 +329,119 @@ const resetCardSwipe = verticalSwipe(card, {
 
 const sheetHandle = $("sheet-handle") || dialog.querySelector(".handle");
 if (sheetHandle) sheetHandle.addEventListener("click", closeDetails);
-const resetSheetSwipe = sheetHandle
-  ? verticalSwipe(sheetHandle, {
-      direction: 1,
-      canStart: () => dialog.open,
-      onProgress: (distance, active) => {
-        dialog.style.setProperty("--sheet-distance", `${Math.min(distance, 160)}px`);
-        dialog.classList.toggle("is-dragging", active);
-      },
-      onCommit: closeDetails,
-    })
-  : () => {};
+function updateSheetScrollPosition() {
+  dialog.classList.toggle("is-scrolled", dialog.scrollTop > 0);
+}
+dialog.addEventListener("scroll", updateSheetScrollPosition, { passive: true });
+
+const sheetTouchFallback = !window.CSS?.supports?.(
+  "touch-action",
+  "pan-x pan-down pinch-zoom",
+);
+function canStartSheetSwipe(target) {
+  return (
+    dialog.open &&
+    (sheetHandle?.contains(target) ||
+      (dialog.scrollTop <= 0 &&
+        !target.closest(
+          "a, button, input, select, textarea, label, summary, iframe, [role='button'], [role='link'], [role='tab'], [contenteditable='true']",
+        )))
+  );
+}
+function renderSheetSwipe(distance, active) {
+  dialog.style.setProperty("--sheet-distance", `${Math.min(distance, 160)}px`);
+  dialog.classList.toggle("is-dragging", active);
+}
+const resetSheetSwipe = verticalSwipe(dialog, {
+  direction: 1,
+  canStart: (target, event) =>
+    !(sheetTouchFallback && event.pointerType === "touch") &&
+    canStartSheetSwipe(target),
+  onProgress: renderSheetSwipe,
+  onCommit: closeDetails,
+});
+
+// Browsers without directional touch-action need to intercept only a downward
+// touch. Other movements retain the sheet's native scrolling and pinch zoom.
+function touchSheetSwipe() {
+  let gesture = null;
+  let suppressClickUntil = 0;
+  function reset() {
+    gesture = null;
+    renderSheetSwipe(0, false);
+  }
+  dialog.addEventListener("touchstart", (event) => {
+    reset();
+    suppressClickUntil = 0;
+    if (event.touches.length !== 1 || !canStartSheetSwipe(event.target)) return;
+    const touch = event.touches[0];
+    gesture = {
+      id: touch.identifier,
+      x: touch.clientX,
+      y: touch.clientY,
+      active: false,
+      moved: false,
+      rejected: false,
+    };
+  }, { passive: true });
+  dialog.addEventListener("touchmove", (event) => {
+    if (!gesture) return;
+    if (event.touches.length !== 1) return reset();
+    const touch = event.touches[0];
+    if (touch.identifier !== gesture.id) return reset();
+    const distance = touch.clientY - gesture.y;
+    const horizontal = Math.abs(touch.clientX - gesture.x);
+    if (Math.max(Math.abs(distance), horizontal) > 10) gesture.moved = true;
+    if (gesture.rejected) return;
+    if (
+      distance < -12 ||
+      (horizontal > 16 && horizontal > Math.abs(distance) * 1.1)
+    ) {
+      gesture.rejected = true;
+      gesture.active = false;
+      renderSheetSwipe(0, false);
+      return;
+    }
+    if (!gesture.active && (distance < 8 || distance < horizontal * 1.2)) return;
+    if (!event.cancelable) {
+      gesture.rejected = true;
+      gesture.active = false;
+      renderSheetSwipe(0, false);
+      return;
+    }
+    event.preventDefault();
+    gesture.active = true;
+    renderSheetSwipe(Math.max(0, distance), true);
+  }, { passive: false });
+  dialog.addEventListener("touchend", (event) => {
+    if (!gesture) return;
+    const touch = [...event.changedTouches].find(t => t.identifier === gesture.id);
+    if (!touch) return;
+    const distance = touch.clientY - gesture.y;
+    const horizontal = Math.abs(touch.clientX - gesture.x);
+    const complete =
+      gesture.active && distance >= 60 && distance > horizontal * 1.25;
+    const moved = gesture.moved || Math.max(Math.abs(distance), horizontal) > 10;
+    reset();
+    if (moved) suppressClickUntil = performance.now() + 500;
+    if (complete) closeDetails();
+  }, { passive: true });
+  dialog.addEventListener("touchcancel", reset, { passive: true });
+  dialog.addEventListener("click", (event) => {
+    if (event.detail > 0 && performance.now() < suppressClickUntil) {
+      suppressClickUntil = 0;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  }, true);
+  return reset;
+}
+const resetSheetTouchSwipe = sheetTouchFallback ? touchSheetSwipe() : () => {};
 
 dialog.addEventListener("close", () => {
   resetCardSwipe();
   resetSheetSwipe();
+  resetSheetTouchSwipe();
 });
 const tabs = [...document.querySelectorAll("[role=tab]")];
 function selectTab(tab) {

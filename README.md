@@ -5,7 +5,7 @@ A phone-first digital card using Tapx navy (`#061e3f`), red (`#f32230`), and whi
 ## Preview
 Open `index.html` in a browser. No installation or build step is needed. Share uses the browser share menu or clipboard when served over HTTP(S); it explains the limitation when opened as a local file.
 
-Swipe up from the portrait, profile, or bottom cue to explore. Keyboard users can focus the cue and press Enter or Space. Close the sheet with its close button, Escape, the backdrop, or a downward swipe on the top handle. When the content is taller than the viewport, the page scrolls naturally and the bottom cue remains the swipe target. The layout supports phone safe areas, pinch zoom, and reduced-motion preferences.
+Swipe up from the portrait, profile, or bottom cue to explore. Keyboard users can focus the cue and press Enter or Space. Swipe down on the sheet to close it when its content is at the top; scrolling through longer details remains available. The top handle, close button, Escape, and backdrop also close it. Connect uses a monochrome WhatsApp icon. When the profile is taller than the viewport, the page scrolls naturally and the bottom cue remains the swipe target. The layout supports phone safe areas, pinch zoom, and reduced-motion preferences.
 
 ## Personalize
 Edit `profile.js` to update your details, image paths, social URLs, and gallery entries. Empty social URLs, website, and address are hidden until supplied. The current bio is draft copy.
