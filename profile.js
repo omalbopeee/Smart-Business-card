@@ -14,8 +14,8 @@ window.PROFILE = {
   website: "",
   address: "",
   portrait: "assets/omal-bopage.png",
-  logo: "",
-  accent: "#ee394b",
+  logo: "assets/tapx-logo.svg",
+  accent: "#f32230",
   socials: {
     facebook: "https://www.facebook.com/share/1KTcXatjhG/?mibextid=wwXIfr",
     instagram: "https://www.instagram.com/_omal__bopeee_/",

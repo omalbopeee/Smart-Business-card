@@ -122,8 +122,73 @@ if (p.gallery.length) {
   $("gallery").textContent = "A closer look at my work - photos coming soon.";
 }
 const dialog = $("contact-dialog");
-$("open-contact").onclick = () => dialog.showModal();
-$("close-contact").onclick = () => dialog.close();
+const openContact = $("open-contact");
+const card = document.querySelector(".card");
+
+// Keep page scrolling available when the card is taller than the screen,
+// including outer desktop padding and a smaller viewport after zooming.
+function updateCardScrollability() {
+  const bounds = card.getBoundingClientRect();
+  const bodyStyle = getComputedStyle(document.body);
+  const paddingTop = parseFloat(bodyStyle.paddingTop) || 0;
+  const paddingBottom = parseFloat(bodyStyle.paddingBottom) || 0;
+  const layoutHeight = document.documentElement.clientHeight || innerHeight;
+  const viewportHeight = window.visualViewport
+    ? Math.min(layoutHeight, window.visualViewport.height)
+    : layoutHeight;
+  // Measure the profile only: the fixed details dialog can scroll separately.
+  const contentHeight = Math.max(
+    bounds.height + paddingTop + paddingBottom,
+    bounds.bottom + window.scrollY + paddingBottom,
+  );
+  card.classList.toggle("is-scrollable", contentHeight > viewportHeight + 1);
+}
+let scrollCheckPending = false;
+function scheduleScrollabilityCheck() {
+  if (scrollCheckPending) return;
+  scrollCheckPending = true;
+  requestAnimationFrame(() => {
+    scrollCheckPending = false;
+    updateCardScrollability();
+  });
+}
+window.addEventListener("resize", scheduleScrollabilityCheck);
+window.visualViewport?.addEventListener("resize", scheduleScrollabilityCheck);
+if ("ResizeObserver" in window) {
+  new ResizeObserver(scheduleScrollabilityCheck).observe(card);
+}
+updateCardScrollability();
+
+openContact.setAttribute("aria-controls", dialog.id);
+openContact.setAttribute("aria-expanded", "false");
+
+function openDetails() {
+  if (dialog.open) return;
+  dialog.showModal();
+  openContact.setAttribute("aria-expanded", "true");
+  $("close-contact").focus({ preventScroll: true });
+}
+
+function closeDetails() {
+  if (dialog.open) dialog.close();
+}
+
+openContact.addEventListener("click", openDetails);
+openContact.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowUp") {
+    event.preventDefault();
+    openDetails();
+  }
+});
+$("close-contact").addEventListener("click", closeDetails);
+dialog.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeDetails();
+});
+dialog.addEventListener("close", () => {
+  openContact.setAttribute("aria-expanded", "false");
+  openContact.focus({ preventScroll: true });
+});
 dialog.addEventListener("click", (e) => {
   if (e.target === dialog) {
     const r = dialog.getBoundingClientRect();
@@ -133,22 +198,150 @@ dialog.addEventListener("click", (e) => {
       e.clientY < r.top ||
       e.clientY > r.bottom
     )
-      dialog.close();
+      closeDetails();
   }
 });
-let startY = 0;
-$("open-contact").addEventListener(
-  "touchstart",
-  (e) => (startY = e.changedTouches[0].clientY),
-  { passive: true },
-);
-$("open-contact").addEventListener(
-  "touchend",
-  (e) => {
-    if (startY - e.changedTouches[0].clientY > 25) dialog.showModal();
+
+// Pointer events support the same gesture on touchscreens, pens, and mice.
+// Capture begins only after an upward/downward intent is clear, so taps and
+// horizontal gestures retain their normal behavior.
+function verticalSwipe(surface, { direction, canStart, onProgress, onCommit }) {
+  const threshold = 60;
+  let gesture = null;
+  let suppressClickUntil = 0;
+
+  function reset() {
+    const pointerId = gesture?.pointerId;
+    gesture = null;
+    onProgress(0, false);
+    if (pointerId !== undefined && surface.hasPointerCapture(pointerId)) {
+      surface.releasePointerCapture(pointerId);
+    }
+  }
+
+  surface.addEventListener("pointerdown", (event) => {
+    if (gesture) reset();
+    suppressClickUntil = 0;
+    if (
+      event.isPrimary === false ||
+      (event.pointerType === "mouse" && event.button !== 0) ||
+      (canStart && !canStart(event.target))
+    )
+      return;
+    gesture = {
+      pointerId: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      active: false,
+      moved: false,
+      rejected: false,
+    };
+  });
+
+  surface.addEventListener(
+    "pointermove",
+    (event) => {
+      if (!gesture || gesture.pointerId !== event.pointerId) return;
+      const distance = direction * (event.clientY - gesture.y);
+      const horizontal = Math.abs(event.clientX - gesture.x);
+      if (Math.max(Math.abs(distance), horizontal) > 10) gesture.moved = true;
+      if (gesture.rejected) return;
+
+      if (
+        distance < -12 ||
+        (horizontal > 16 && horizontal > Math.abs(distance) * 1.1)
+      ) {
+        gesture.rejected = true;
+        gesture.active = false;
+        onProgress(0, false);
+        return;
+      }
+      if (!gesture.active) {
+        if (distance < 8 || distance < horizontal * 1.2) return;
+        gesture.active = true;
+        surface.setPointerCapture(event.pointerId);
+      }
+      onProgress(Math.max(0, distance), true);
+      if (event.cancelable) event.preventDefault();
+    },
+    { passive: false },
+  );
+
+  surface.addEventListener("pointerup", (event) => {
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+    const distance = direction * (event.clientY - gesture.y);
+    const horizontal = Math.abs(event.clientX - gesture.x);
+    const complete =
+      gesture.active && distance >= threshold && distance > horizontal * 1.25;
+    const moved = gesture.moved || Math.max(Math.abs(distance), horizontal) > 10;
+    reset();
+    if (moved) {
+      // Consume the click synthesized after a drag. A rejected or incomplete
+      // swipe should not activate the cue's tap fallback.
+      suppressClickUntil = performance.now() + 500;
+    }
+    if (complete) onCommit();
+  });
+
+  surface.addEventListener("pointercancel", (event) => {
+    if (gesture?.pointerId === event.pointerId) reset();
+  });
+  surface.addEventListener("lostpointercapture", (event) => {
+    // Touch starts with implicit capture on the element under the finger.
+    // Its capture-loss event bubbles when we take capture on the surface;
+    // that transfer should not cancel the newly recognized gesture.
+    if (event.target === surface && gesture?.pointerId === event.pointerId) {
+      reset();
+    }
+  });
+  surface.addEventListener(
+    "click",
+    (event) => {
+      if (event.detail > 0 && performance.now() < suppressClickUntil) {
+        suppressClickUntil = 0;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    },
+    true,
+  );
+  return reset;
+}
+
+const resetCardSwipe = verticalSwipe(card, {
+  direction: -1,
+  canStart: (target) =>
+    !dialog.open &&
+    (openContact.contains(target) ||
+      !target.closest(
+        "a, button, input, select, textarea, label, summary, iframe, [role='button'], [role='link'], [role='tab'], [contenteditable='true']",
+      )),
+  onProgress: (distance, active) => {
+    card.style.setProperty("--swipe-progress", Math.min(distance / 60, 1));
+    card.style.setProperty("--swipe-distance", `${Math.min(distance, 100)}px`);
+    card.classList.toggle("is-swiping", active);
   },
-  { passive: true },
-);
+  onCommit: openDetails,
+});
+
+const sheetHandle = $("sheet-handle") || dialog.querySelector(".handle");
+if (sheetHandle) sheetHandle.addEventListener("click", closeDetails);
+const resetSheetSwipe = sheetHandle
+  ? verticalSwipe(sheetHandle, {
+      direction: 1,
+      canStart: () => dialog.open,
+      onProgress: (distance, active) => {
+        dialog.style.setProperty("--sheet-distance", `${Math.min(distance, 160)}px`);
+        dialog.classList.toggle("is-dragging", active);
+      },
+      onCommit: closeDetails,
+    })
+  : () => {};
+
+dialog.addEventListener("close", () => {
+  resetCardSwipe();
+  resetSheetSwipe();
+});
 const tabs = [...document.querySelectorAll("[role=tab]")];
 function selectTab(tab) {
   tabs.forEach((t) => {
