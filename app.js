@@ -1,5 +1,25 @@
 const p = window.PROFILE;
 const $ = (id) => document.getElementById(id);
+
+// Dialog focus stays in place for accessibility; touch and mouse interaction
+// should not inherit a keyboard focus ring after opening or closing the sheet.
+function usePointerInput() {
+  document.documentElement.dataset.inputMode = "pointer";
+}
+document.addEventListener("pointerdown", usePointerInput, {
+  capture: true,
+  passive: true,
+});
+document.addEventListener("touchstart", usePointerInput, {
+  capture: true,
+  passive: true,
+});
+document.addEventListener("keydown", (event) => {
+  if (!["Shift", "Control", "Alt", "Meta"].includes(event.key)) {
+    document.documentElement.dataset.inputMode = "keyboard";
+  }
+}, true);
+
 const paths = {
   share: '<path d="M12 16V3m-5 5 5-5 5 5M5 13v7h14v-7"/>',
   download: '<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',

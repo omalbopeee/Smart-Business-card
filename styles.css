@@ -34,6 +34,10 @@ button:focus-visible, a:focus-visible, [tabindex="0"]:focus-visible {
   outline-offset: 4px;
 }
 
+html[data-input-mode="pointer"] :is(button, a, [tabindex="0"]):focus {
+  outline: none;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -346,8 +350,14 @@ h1 {
   line-height: 1.5;
 }
 
-.swipe-cue:hover .swipe-track, .is-swiping .swipe-track {
+.is-swiping .swipe-track {
   border-color: var(--accent);
+}
+
+@media (hover: hover) {
+  .swipe-cue:hover .swipe-track {
+    border-color: var(--accent);
+  }
 }
 
 .is-swiping .swipe-track, .is-swiping .swipe-copy {
