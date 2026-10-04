@@ -192,8 +192,26 @@ function openDetails() {
   $("close-contact").focus({ preventScroll: true });
 }
 
+let closeAnimation = null;
 function closeDetails() {
-  if (dialog.open) dialog.close();
+  if (!dialog.open || closeAnimation) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    dialog.close();
+    return;
+  }
+  const startTransform = getComputedStyle(dialog).transform;
+  const remainingDistance = Math.max(0, innerHeight - dialog.getBoundingClientRect().top);
+  dialog.classList.remove("is-dragging");
+  dialog.classList.add("is-closing");
+  closeAnimation = dialog.animate([
+    { transform: startTransform, opacity: 1 },
+    { transform: `translateY(${remainingDistance + parseFloat(dialog.style.getPropertyValue("--sheet-distance") || 0)}px)`, opacity: 0 },
+  ], {
+    duration: 280,
+    easing: "cubic-bezier(0.32, 0, 0.67, 0)",
+    fill: "forwards",
+  });
+  closeAnimation.onfinish = () => dialog.close();
 }
 
 openContact.addEventListener("click", openDetails);
@@ -209,6 +227,9 @@ dialog.addEventListener("cancel", (event) => {
   closeDetails();
 });
 dialog.addEventListener("close", () => {
+  closeAnimation?.cancel();
+  closeAnimation = null;
+  dialog.classList.remove("is-closing");
   openContact.setAttribute("aria-expanded", "false");
   openContact.focus({ preventScroll: true });
 });
@@ -228,15 +249,15 @@ dialog.addEventListener("click", (e) => {
 // Pointer events support the same gesture on touchscreens, pens, and mice.
 // Capture begins only after an upward/downward intent is clear, so taps and
 // horizontal gestures retain their normal behavior.
-function verticalSwipe(surface, { direction, canStart, onProgress, onCommit }) {
+function verticalSwipe(surface, { direction, canStart, onProgress, onCommit, preserveOnCommit = false }) {
   const threshold = 60;
   let gesture = null;
   let suppressClickUntil = 0;
 
-  function reset() {
+  function reset({ preserveProgress = false } = {}) {
     const pointerId = gesture?.pointerId;
     gesture = null;
-    onProgress(0, false);
+    if (!preserveProgress) onProgress(0, false);
     if (pointerId !== undefined && surface.hasPointerCapture(pointerId)) {
       surface.releasePointerCapture(pointerId);
     }
@@ -297,7 +318,7 @@ function verticalSwipe(surface, { direction, canStart, onProgress, onCommit }) {
     const complete =
       gesture.active && distance >= threshold && distance > horizontal * 1.25;
     const moved = gesture.moved || Math.max(Math.abs(distance), horizontal) > 10;
-    reset();
+    reset({ preserveProgress: complete && preserveOnCommit });
     if (moved) {
       // Consume the click synthesized after a drag. A rejected or incomplete
       // swipe should not activate the cue's tap fallback.
@@ -360,7 +381,7 @@ const sheetTouchFallback = !window.CSS?.supports?.(
 );
 function canStartSheetSwipe(target) {
   return (
-    dialog.open &&
+    dialog.open && !closeAnimation &&
     (sheetHandle?.contains(target) ||
       (dialog.scrollTop <= 0 &&
         !target.closest(
@@ -369,7 +390,9 @@ function canStartSheetSwipe(target) {
   );
 }
 function renderSheetSwipe(distance, active) {
-  dialog.style.setProperty("--sheet-distance", `${Math.min(distance, 160)}px`);
+  const resistance = Math.max(dialog.clientHeight, 240);
+  const offset = distance / (1 + distance / resistance);
+  dialog.style.setProperty("--sheet-distance", `${offset}px`);
   dialog.classList.toggle("is-dragging", active);
 }
 const resetSheetSwipe = verticalSwipe(dialog, {
@@ -379,6 +402,7 @@ const resetSheetSwipe = verticalSwipe(dialog, {
     canStartSheetSwipe(target),
   onProgress: renderSheetSwipe,
   onCommit: closeDetails,
+  preserveOnCommit: true,
 });
 
 // Browsers without directional touch-action need to intercept only a downward
@@ -386,9 +410,9 @@ const resetSheetSwipe = verticalSwipe(dialog, {
 function touchSheetSwipe() {
   let gesture = null;
   let suppressClickUntil = 0;
-  function reset() {
+  function reset({ preserveProgress = false } = {}) {
     gesture = null;
-    renderSheetSwipe(0, false);
+    if (!preserveProgress) renderSheetSwipe(0, false);
   }
   dialog.addEventListener("touchstart", (event) => {
     reset();
@@ -442,7 +466,7 @@ function touchSheetSwipe() {
     const complete =
       gesture.active && distance >= 60 && distance > horizontal * 1.25;
     const moved = gesture.moved || Math.max(Math.abs(distance), horizontal) > 10;
-    reset();
+    reset({ preserveProgress: complete });
     if (moved) suppressClickUntil = performance.now() + 500;
     if (complete) closeDetails();
   }, { passive: true });
