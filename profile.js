@@ -13,8 +13,8 @@ window.PROFILE = {
   email: "omalbopage@gmail.com",
   website: "",
   address: "",
-  portrait: "assets/omal-bopage.png",
-  logo: "assets/tapx-logo.svg",
+  portrait: "assets/omal-profile.png",
+  logo: "assets/tapx-logo.png",
   accent: "#f32230",
   socials: {
     facebook: "https://www.facebook.com/share/1KTcXatjhG/?mibextid=wwXIfr",

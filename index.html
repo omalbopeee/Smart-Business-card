@@ -4,171 +4,74 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#061e3f" />
+    <meta name="description" content="Connect with Omal Bopage, Co-Founder of Tapx. Save contact details or start a conversation." />
     <title>Omal Bopage | Digital business card</title>
+    <link rel="preload" href="assets/omal-profile.png" as="image" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="card" aria-label="Digital business card">
       <header class="card-header">
-        <a class="brand" href="#" aria-label="Back to profile">
-          <span id="brand"
-            ><img src="assets/tapx-logo.svg" alt="Tapx" width="76" height="76"
-          /></span>
-        </a>
-        <span class="header-label"
-          >DIGITAL BUSINESS CARD<span>A personal connection.</span></span
-        >
-        <button
-          class="share-top"
-          id="share-top"
-          aria-label="Share profile"
-        ></button>
+        <a class="brand" href="#" aria-label="Back to profile"><span id="brand"><img src="assets/tapx-logo.png" alt="Tapx" width="62" height="62" /></span></a>
+        <span class="header-label">DIGITAL BUSINESS CARD</span>
+        <button class="share-top" id="share-top" aria-label="Share profile"></button>
       </header>
-      <div class="portrait-stage" aria-hidden="true">
-        <div class="portrait-outline"></div>
-        <div class="portrait-accent"></div>
-        <div class="portrait" id="portrait"></div>
-      </div>
-      <section class="intro" aria-labelledby="name">
-        <p class="eyebrow">
-          <span class="status-dot" aria-hidden="true"></span>LET'S CONNECT
-        </p>
-        <h1 id="name">Omal Bopage</h1>
-        <p class="role" id="role">Co-Founder - Tapx (Pvt) Ltd</p>
-        <p class="bio" id="bio">
-          Making introductions simple and connections meaningful. Let's build
-          something together.
-        </p>
-        <div class="social-strip">
-          <span class="social-label">Connect with me</span>
-          <nav class="socials" id="socials" aria-label="Social links"></nav>
+
+      <section class="hero" aria-labelledby="name">
+        <div class="portrait-stage">
+          <img class="portrait" id="portrait" src="assets/omal-profile.png" alt="Omal Bopage" width="1024" height="1024" fetchpriority="high" decoding="async" />
+          <span class="portrait-corner" aria-hidden="true"></span>
+        </div>
+        <div class="identity">
+          <div class="identity-heading"><p class="eyebrow">A PERSONAL CONNECTION</p><span class="identity-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 9a5 5 0 0 1 0 6M12 6a9 9 0 0 1 0 12M16 3a13 13 0 0 1 0 18" /></svg></span></div>
+          <h1 id="name">Omal Bopage</h1>
+          <div class="work"><p class="role" id="role">Co-Founder</p><span class="work-divider" aria-hidden="true"></span><p class="company-name" id="profile-company">Tapx (Pvt) Ltd</p></div>
+          <p class="bio" id="bio">Making introductions simple and connections meaningful. Let's build something together.</p>
         </div>
       </section>
+
+      <div class="quick-actions" aria-label="Quick contact actions">
+        <button class="primary-action" id="save-contact-quick"><span data-icon="download" aria-hidden="true"></span>Save contact</button>
+        <button class="secondary-action" id="connect-quick" aria-label="Connect on WhatsApp"><span data-icon="whatsapp" aria-hidden="true"></span>WhatsApp</button>
+      </div>
+      <nav class="socials" id="socials" aria-label="Social links"></nav>
+
       <div class="explore-dock">
-        <button
-          class="swipe-cue"
-          id="open-contact"
-          aria-haspopup="dialog"
-          aria-controls="contact-dialog"
-          aria-expanded="false"
-          aria-describedby="swipe-help"
-        >
-          <span class="swipe-track" aria-hidden="true">
-            <span class="swipe-arrow">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.7"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="m6 14 6-6 6 6M6 20l6-6 6 6" />
-              </svg>
-            </span>
-          </span>
-          <span class="swipe-copy"
-            ><strong>Swipe to explore</strong
-            ><span id="swipe-help"
-              >Swipe up or tap for contact details</span
-            ></span
-          >
+        <button class="swipe-cue" id="open-contact" aria-haspopup="dialog" aria-controls="contact-dialog" aria-expanded="false" aria-describedby="swipe-help">
+          <span class="swipe-track" aria-hidden="true"><span class="swipe-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 6-6 6 6M6 20l6-6 6 6" /></svg></span></span>
+          <span class="swipe-copy"><strong>Swipe to explore</strong><span id="swipe-help">Contact details &amp; more · tap also works</span></span>
         </button>
       </div>
-      <footer class="bottom-note">
-        <span
-          >Powered by <strong>Tapx</strong
-          ><span class="footer-dot" aria-hidden="true"></span>Made for a real
-          connection.</span
-        >
-      </footer>
+      <footer class="bottom-note"><span>A better way to connect<span class="footer-dot" aria-hidden="true"></span>Powered by <strong>Tapx</strong></span></footer>
     </main>
+
     <dialog id="contact-dialog" aria-labelledby="panel-title">
       <div class="sheet">
-        <button
-          class="handle"
-          id="sheet-handle"
-          aria-label="Swipe down or tap to close contact details"
-        >
-          <span></span>
-        </button>
+        <button class="handle" id="sheet-handle" aria-label="Swipe down or tap to close contact details"><span></span></button>
         <div class="panel-heading">
-          <div>
-            <p class="eyebrow">KEEP IN TOUCH</p>
-            <h2 id="panel-title">
-              Let's connect<span class="accent-period">.</span>
-            </h2>
-          </div>
-          <button
-            id="close-contact"
-            class="close"
-            aria-label="Close contact details"
-          >
-            &times;
-          </button>
+          <div><p class="eyebrow">LET'S KEEP IN TOUCH</p><h2 id="panel-title">Contact details<span class="accent-period">.</span></h2></div>
+          <button id="close-contact" class="close" aria-label="Close contact details">&times;</button>
+        </div>
+        <div class="sheet-profile">
+          <img class="mini-portrait" data-portrait src="assets/omal-profile.png" alt="" width="52" height="52" />
+          <div><strong id="sheet-name">Omal Bopage</strong><span id="sheet-role">Co-Founder · Tapx (Pvt) Ltd</span></div>
+          <span class="profile-rule" aria-hidden="true"></span>
         </div>
         <div class="actions">
-          <button id="save-contact">
-            <span data-icon="download"></span>Save contact
-          </button>
-          <button id="connect" aria-label="Connect on WhatsApp">
-            <span data-icon="whatsapp"></span>Connect
-          </button>
-          <button id="share"><span data-icon="share"></span>Share</button>
+          <button id="save-contact"><span data-icon="download"></span>Save to contacts<span class="button-arrow" aria-hidden="true">↗</span></button>
+          <button id="connect" aria-label="Connect on WhatsApp"><span data-icon="whatsapp"></span>Connect</button>
+          <button id="share"><span data-icon="share"></span>Share profile</button>
         </div>
-        <p class="section-label">DIRECT LINES</p>
+        <p class="section-label">CONTACT INFORMATION</p>
         <div class="contact-list" id="contact-list"></div>
         <div class="tabs" role="tablist" aria-label="Profile information">
-          <button
-            role="tab"
-            id="tab-about"
-            aria-controls="about"
-            aria-selected="true"
-          >
-            About
-          </button>
-          <button
-            role="tab"
-            id="tab-company"
-            aria-controls="company"
-            aria-selected="false"
-            tabindex="-1"
-          >
-            Company
-          </button>
-          <button
-            role="tab"
-            id="tab-gallery"
-            aria-controls="gallery"
-            aria-selected="false"
-            tabindex="-1"
-          >
-            Gallery
-          </button>
+          <button role="tab" id="tab-about" aria-controls="about" aria-selected="true">About</button>
+          <button role="tab" id="tab-company" aria-controls="company" aria-selected="false" tabindex="-1">Company</button>
+          <button role="tab" id="tab-gallery" aria-controls="gallery" aria-selected="false" tabindex="-1">Gallery</button>
         </div>
-        <section
-          class="tab-content"
-          role="tabpanel"
-          id="about"
-          aria-labelledby="tab-about"
-          tabindex="0"
-        ></section>
-        <section
-          class="tab-content"
-          role="tabpanel"
-          id="company"
-          aria-labelledby="tab-company"
-          tabindex="0"
-          hidden
-        ></section>
-        <section
-          class="tab-content gallery"
-          role="tabpanel"
-          id="gallery"
-          aria-labelledby="tab-gallery"
-          tabindex="0"
-          hidden
-        ></section>
+        <section class="tab-content" role="tabpanel" id="about" aria-labelledby="tab-about" tabindex="0"></section>
+        <section class="tab-content" role="tabpanel" id="company" aria-labelledby="tab-company" tabindex="0" hidden></section>
+        <section class="tab-content gallery" role="tabpanel" id="gallery" aria-labelledby="tab-gallery" tabindex="0" hidden></section>
         <p class="sheet-footer">One card. Every connection.</p>
       </div>
     </dialog>

@@ -59,16 +59,22 @@ function toast(message) {
 }
 document.documentElement.style.setProperty("--accent", p.accent);
 $("name").textContent = p.name || "Your name";
-$("role").textContent =
-  [p.title, p.company].filter(Boolean).join(" - ") ||
-  "Your title - Your company";
+$("role").textContent = p.title || "Your title";
+$("profile-company").textContent = p.company || "";
+$("profile-company").hidden = !p.company;
 $("bio").textContent =
   p.bio || "A little about you and the connections you'd love to make.";
 $("brand").textContent = p.company ? "tapx" : "YOUR BRAND";
 document.title = `${p.name || "Your profile"} | Digital business card`;
 if (p.portrait) {
-  $("portrait").style.backgroundImage = `url(${JSON.stringify(p.portrait)})`;
+  $("portrait").src = p.portrait;
+  $("portrait").alt = p.name || "Profile portrait";
+  document.querySelectorAll("[data-portrait]").forEach((img) => {
+    img.src = p.portrait;
+  });
 }
+$("sheet-name").textContent = p.name || "Your name";
+$("sheet-role").textContent = [p.title, p.company].filter(Boolean).join(" · ");
 if (p.logo) {
   const logo = new Image();
   logo.src = p.logo;
@@ -79,11 +85,16 @@ $("share-top").innerHTML = icon("share");
 document
   .querySelectorAll("[data-icon]")
   .forEach((el) => (el.innerHTML = icon(el.dataset.icon)));
+const socialNames = { facebook: "Facebook", instagram: "Instagram", tiktok: "TikTok" };
 for (const [name, url] of Object.entries(p.socials)) {
   const href = safeUrl(url);
   if (!href) continue;
   const link = document.createElement("a");
   link.innerHTML = icon(name);
+  const label = document.createElement("span");
+  label.className = "social-name";
+  label.textContent = socialNames[name] || name.charAt(0).toUpperCase() + name.slice(1);
+  link.append(label);
   link.setAttribute("aria-label", name);
   link.title = name;
   link.href = href;
@@ -586,4 +597,6 @@ async function share() {
 }
 $("share").onclick = share;
 $("share-top").onclick = share;
+$("save-contact-quick").onclick = () => $("save-contact").click();
+$("connect-quick").onclick = () => $("connect").click();
 
