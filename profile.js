@@ -1,26 +1,30 @@
-window.PROFILE = {
+﻿window.PROFILE = {
   name: "Omal Bopage",
-  title: "Co-Founder",
-  company: "Tapx (Pvt) Ltd",
+  title: "Co-founder at TAPX",
+  company: "TAPX",
+  companyLegalName: "Tapx (Pvt) Ltd",
+  tagline: "Let's stay connected.",
+  about: "I'm Omal, co-founder at TAPX.\nLet's connect and stay in touch.",
   bio: "Making introductions simple and connections meaningful. Let's build something together.",
-  about:
-    "Hi, I'm Omal, a BSc (Hons) AI undergraduate at the University of Moratuwa and Co-Founder of Tapx (Pvt) Ltd. I believe a great connection can be the start of something extraordinary. I'm here to share ideas, explore collaborations, and make it easier to stay in touch.",
-  companyDescription:
-    "Tapx (Pvt) Ltd.\nLet's connect to learn more about our work and explore opportunities together.",
   phone: "+94762199292",
   phoneDisplay: "076 219 9292",
   whatsapp: "+94762199292",
   email: "omalbopage@gmail.com",
-  website: "",
-  address: "",
+  website: "https://tapx.lk/",
   portrait: "assets/omal-profile.png",
   logo: "assets/tapx-logo.png",
-  accent: "#f32230",
+  companyWebsite: "https://tapx.lk/",
+  companyTagline: "Smart cards. Meaningful connections.",
+  companyDescription: "TAPX creates NFC smart cards, contact stickers and digital business profiles to help you share your details and business links with a tap.",
+  showCompany: true,
   socials: {
     facebook: "https://www.facebook.com/share/1KTcXatjhG/?mibextid=wwXIfr",
     instagram: "https://www.instagram.com/_omal__bopeee_/",
+    linkedin: "",
     tiktok: "https://www.tiktok.com/@omal_bopeeeee",
   },
-  gallery: [],
+  gallery: [
+    { src: "assets/tapx-card-navy.png", title: "Navy & red business card", alt: "Front and back of a navy and red TAPX business card" },
+    { src: "assets/tapx-card-classic.png", title: "Another smart card concept", alt: "Front and back of a black and white TAPX business card with blue accents" },
+  ],
 };
-

@@ -4,78 +4,102 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#061e3f" />
-    <meta name="description" content="Connect with Omal Bopage, Co-Founder of Tapx. Save contact details or start a conversation." />
-    <title>Omal Bopage | Digital business card</title>
+    <meta name="description" content="Omal Bopage's personal digital profile. Save my contact details, stay in touch, and explore TAPX." />
+    <title>Omal Bopage | Personal Digital Profile</title>
     <link rel="preload" href="assets/omal-profile.png" as="image" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="card" aria-label="Digital business card">
-      <header class="card-header">
-        <a class="brand" href="#" aria-label="Back to profile"><span id="brand"><img src="assets/tapx-logo.png" alt="Tapx" width="62" height="62" /></span></a>
-        <span class="header-label">DIGITAL BUSINESS CARD</span>
-        <button class="share-top" id="share-top" aria-label="Share profile"></button>
-      </header>
-
-      <section class="hero" aria-labelledby="name">
-        <div class="portrait-stage">
-          <img class="portrait" id="portrait" src="assets/omal-profile.png" alt="Omal Bopage" width="1024" height="1024" fetchpriority="high" decoding="async" />
-          <span class="portrait-corner" aria-hidden="true"></span>
+    <main class="app-shell" id="app">
+      <section class="screen home-screen" id="screen-profile" aria-label="Personal profile">
+        <div class="profile-hero">
+          <div class="signal-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+          <header class="profile-header">
+            <a class="profile-brand" href="#profile" aria-label="My personal profile"><span class="initials" data-initials>OB<span class="status-dot"></span></span><span>PERSONAL<br /><b>PROFILE</b></span></a>
+            <a class="edit-link" href="#signin"><span data-icon="edit"></span>Edit Profile</a>
+          </header>
+          <div class="profile-photo"><img data-portrait src="assets/omal-profile.png" width="1024" height="1024" alt="Omal Bopage" fetchpriority="high" /></div>
+          <h1 data-name>Omal Bopage</h1>
+          <p class="profile-title" data-title>Co-founder at TAPX</p>
+          <p class="profile-tagline" data-tagline>Let's stay connected.</p>
         </div>
-        <div class="identity">
-          <div class="identity-heading"><p class="eyebrow">A PERSONAL CONNECTION</p><span class="identity-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 9a5 5 0 0 1 0 6M12 6a9 9 0 0 1 0 12M16 3a13 13 0 0 1 0 18" /></svg></span></div>
-          <h1 id="name">Omal Bopage</h1>
-          <div class="work"><p class="role" id="role">Co-Founder</p><span class="work-divider" aria-hidden="true"></span><p class="company-name" id="profile-company">Tapx (Pvt) Ltd</p></div>
-          <p class="bio" id="bio">Making introductions simple and connections meaningful. Let's build something together.</p>
+        <div class="contact-panel pale-panel">
+          <button class="button button-red save-button" data-action="save-contact"><span data-icon="save"></span>Save Contact</button>
+          <div class="contact-grid">
+            <a class="contact-button" data-contact="phone" href="tel:+94762199292"><span data-icon="phone"></span><span>Call</span></a>
+            <a class="contact-button whatsapp-button" data-contact="whatsapp" href="https://wa.me/94762199292" target="_blank" rel="noopener noreferrer"><span data-icon="whatsapp"></span><span>WhatsApp</span></a>
+            <a class="contact-button" data-contact="email" href="mailto:omalbopage@gmail.com"><span data-icon="email"></span><span>Email</span></a>
+            <a class="contact-button" data-contact="website" href="https://tapx.lk/" target="_blank" rel="noopener noreferrer"><span data-icon="globe"></span><span data-website-label>tapx.lk</span></a>
+          </div>
+          <a class="swipe-cue" id="swipe-up" href="#socials" aria-label="Swipe up or tap for my social links"><span class="swipe-chevron" data-icon="chevron-up"></span><span>Swipe up for my social links</span></a>
+          <nav class="page-dots" aria-label="Profile pages"><a class="active" href="#profile" aria-label="Contact page" aria-current="page"></a><a href="#socials" aria-label="Social links page"></a></nav>
+          <footer class="powered">Powered by <a data-company-website href="https://tapx.lk/" target="_blank" rel="noopener noreferrer">TAPX</a></footer>
         </div>
       </section>
 
-      <div class="quick-actions" aria-label="Quick contact actions">
-        <button class="primary-action" id="save-contact-quick"><span data-icon="download" aria-hidden="true"></span>Save contact</button>
-        <button class="secondary-action" id="connect-quick" aria-label="Connect on WhatsApp"><span data-icon="whatsapp" aria-hidden="true"></span>WhatsApp</button>
-      </div>
-      <nav class="socials" id="socials" aria-label="Social links"></nav>
+      <section class="screen socials-screen" id="screen-socials" aria-label="About me and social links" hidden>
+        <header class="socials-header">
+          <a class="mini-profile" href="#profile"><img class="mini-photo" data-portrait src="assets/omal-profile.png" width="62" height="62" alt="" /><span><strong data-name>Omal Bopage</strong><small>My personal profile</small></span></a>
+          <span class="page-count">02 / 02</span>
+          <h2>Let's connect.</h2>
+        </header>
+        <div class="socials-panel pale-panel">
+          <section class="about-card white-card"><h3>About me</h3><p data-about>I'm Omal, co-founder at TAPX.<br />Let's connect and stay in touch.</p></section>
+          <section class="social-section" aria-labelledby="social-heading"><h3 id="social-heading">My social links</h3><p class="muted">Follow my personal accounts.</p><nav class="social-grid" id="social-links" aria-label="Personal social accounts"></nav></section>
+          <a class="company-link" href="#company" id="company-link"><img data-company-logo src="assets/tapx-logo.png" width="62" height="62" alt="TAPX" /><span><strong>My company</strong><b data-company-name>TAPX</b><small>Company, products &amp; photos</small></span><span data-icon="arrow-up-right"></span></a>
+          <a class="button button-soft edit-profile-wide" href="#signin"><span data-icon="edit"></span>Edit Profile</a>
+          <a class="swipe-down" id="swipe-down" href="#profile" aria-label="Swipe down or tap to return to my contact details"><span data-icon="chevron-down"></span></a>
+        </div>
+        <nav class="page-dots on-navy" aria-label="Profile pages"><a href="#profile" aria-label="Contact page"></a><a class="active" href="#socials" aria-label="Social links page" aria-current="page"></a></nav>
+        <footer class="powered on-navy">Powered by <a data-company-website href="https://tapx.lk/" target="_blank" rel="noopener noreferrer">TAPX</a></footer>
+      </section>
 
-      <div class="explore-dock">
-        <button class="swipe-cue" id="open-contact" aria-haspopup="dialog" aria-controls="contact-dialog" aria-expanded="false" aria-describedby="swipe-help">
-          <span class="swipe-track" aria-hidden="true"><span class="swipe-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 6-6 6 6M6 20l6-6 6 6" /></svg></span></span>
-          <span class="swipe-copy"><strong>Swipe to explore</strong><span id="swipe-help">Contact details &amp; more · tap also works</span></span>
-        </button>
-      </div>
-      <footer class="bottom-note"><span>A better way to connect<span class="footer-dot" aria-hidden="true"></span>Powered by <strong>Tapx</strong></span></footer>
+      <section class="screen company-screen detail-screen" id="screen-company" aria-label="TAPX company" hidden>
+        <header class="detail-header"><img class="company-logo" data-company-logo src="assets/tapx-logo.png" width="65" height="65" alt="TAPX" /><div class="detail-heading-meta"><span data-company-eyebrow>TAPX / COMPANY</span><a class="close-button" href="#socials" aria-label="Close company profile"><span data-icon="close"></span></a></div></header>
+        <h2>Meet <span data-company-name>TAPX</span></h2>
+        <div class="company-banner"><img data-company-logo src="assets/tapx-logo.png" width="130" height="130" alt="TAPX" /><p data-company-tagline>Smart cards. Meaningful connections.</p></div>
+        <section class="company-description pale-card"><h3>A better way to connect.</h3><p data-company-description>TAPX creates NFC smart cards, contact stickers and digital business profiles to help you share your details and business links with a tap.</p><strong>NFC CARDS / STICKERS / DIGITAL PROFILES</strong></section>
+        <div class="company-previews" id="company-previews"></div>
+        <nav class="company-actions" aria-label="Explore TAPX"><a class="button button-blue" href="#gallery">Gallery</a><a class="button button-red" href="#products">Products</a><a class="button button-blue" data-company-website href="https://tapx.lk/" target="_blank" rel="noopener noreferrer">Website</a></nav>
+        <footer class="company-footer"><a data-company-website href="https://tapx.lk/" target="_blank" rel="noopener noreferrer" data-company-domain>www.tapx.lk</a></footer>
+      </section>
+
+      <section class="screen gallery-screen detail-screen" id="screen-gallery" aria-label="TAPX photo gallery" hidden>
+        <header class="detail-header"><img class="company-logo" data-company-logo src="assets/tapx-logo.png" width="65" height="65" alt="TAPX" /><div class="detail-heading-meta"><span>TAPX / GALLERY</span><a class="close-button" href="#company" aria-label="Back to company"><span data-icon="close"></span></a></div></header>
+        <h2>Photo gallery</h2><p class="detail-intro">A collection of TAPX design previews.</p>
+        <div class="gallery-list" id="gallery-list"></div>
+        <a class="button button-red gallery-products" href="#products">Explore our products</a>
+        <a class="back-link" href="#company">Back to company</a>
+      </section>
+
+      <section class="screen products-screen detail-screen" id="screen-products" aria-label="TAPX products" hidden>
+        <header class="detail-header"><img class="company-logo" data-company-logo src="assets/tapx-logo.png" width="65" height="65" alt="TAPX" /><div class="detail-heading-meta"><span>TAPX / PRODUCTS</span><a class="close-button" href="#company" aria-label="Back to company"><span data-icon="close"></span></a></div></header>
+        <h2>Our products</h2>
+        <article class="product-card pale-card"><img class="product-image" id="business-card-image" src="assets/tapx-card-navy.png" width="631" height="400" alt="Front and back of the TAPX smart business card" /><h3>Smart Business Card</h3><p>One tap to your digital profile and contacts.</p><a class="button button-red" href="#gallery">View card designs</a></article>
+        <article class="product-card sticker-card pale-card"><div class="sticker-layout"><div class="sticker-preview" aria-hidden="true"><img data-company-logo src="assets/tapx-logo.png" width="94" height="94" alt="" /><strong>TAP TO CONNECT</strong><div class="sticker-mini-buttons"><span>Call us</span><span>WhatsApp</span><span>Visit website</span></div></div><div><h3>NFC Contact Sticker</h3><p>A simple tap for your business links and contact details.</p></div></div><a class="button button-red" href="#company">Learn more about TAPX</a></article>
+        <a class="button button-blue products-back" href="#company">Back to company</a>
+      </section>
+
+      <section class="screen signin-screen" id="screen-signin" aria-label="Profile owner access" hidden>
+        <img class="signin-logo" data-company-logo src="assets/tapx-logo.png" width="98" height="98" alt="TAPX" />
+        <h2>Your profile. Your control.</h2><p class="signin-subtitle">Keep your details up to date.</p>
+        <form class="signin-card pale-card" id="owner-form"><h3>Edit your profile</h3><p>Use the email address linked to your card.</p><label for="owner-email">Email address</label><input id="owner-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required /><button class="button button-red" type="submit">Continue with email</button><p class="form-error" id="owner-error" role="status"></p><span class="owner-access-label">PROFILE OWNER ACCESS</span><p class="demo-note">Preview editor: changes are saved in this browser only.</p></form>
+        <a class="back-link" href="#profile">Back to my profile</a><footer class="powered on-navy">Powered by TAPX</footer>
+      </section>
+
+      <section class="screen editor-screen" id="screen-editor" aria-label="Edit my profile" hidden>
+        <header class="editor-header"><div><h2>Edit Profile</h2><p>Keep your first impression up to date.</p></div><button class="button button-red" type="submit" form="profile-form">Save</button></header>
+        <form class="editor-body" id="profile-form">
+          <section class="photo-editor white-card"><img class="editor-photo" id="editor-photo" data-portrait src="assets/omal-profile.png" width="68" height="68" alt="Current profile photo" /><div><h3>Profile photo</h3><label class="button button-soft photo-picker" for="photo-input">Change photo</label><input class="visually-hidden" id="photo-input" name="photo" type="file" accept="image/*" /></div></section>
+          <section class="form-card white-card"><h3>Personal details</h3><label for="edit-name">FULL NAME</label><input id="edit-name" name="name" type="text" autocomplete="name" required maxlength="80" /><label for="edit-title">TITLE</label><input id="edit-title" name="title" type="text" maxlength="120" /><label for="edit-about">ABOUT ME</label><textarea id="edit-about" name="about" rows="3" maxlength="1600"></textarea></section>
+          <section class="form-card contact-editor white-card"><h3>Contact details</h3><label for="edit-phone">Phone</label><input id="edit-phone" name="phone" type="tel" autocomplete="tel" placeholder="Add personal phone number" /><label for="edit-email">Email</label><input id="edit-email" name="email" type="email" autocomplete="email" placeholder="Add personal email address" /><label for="edit-whatsapp">WhatsApp</label><input id="edit-whatsapp" name="whatsapp" type="tel" placeholder="WhatsApp number" /></section>
+          <section class="manage-card white-card"><div><h3>Personal socials &amp; company</h3><p>Facebook / Instagram / LinkedIn / TikTok</p><p>Optional company profile &amp; photos</p></div><button class="button button-soft" id="toggle-manage" type="button" aria-expanded="false" aria-controls="manage-fields">Manage</button></section>
+          <section class="form-card white-card" id="manage-fields" hidden><h3>Social links &amp; company</h3><label for="edit-facebook">Facebook</label><input id="edit-facebook" name="facebook" type="url" placeholder="https://facebook.com/your-profile" /><label for="edit-instagram">Instagram</label><input id="edit-instagram" name="instagram" type="url" placeholder="https://instagram.com/your-profile" /><label for="edit-linkedin">LinkedIn</label><input id="edit-linkedin" name="linkedin" type="url" placeholder="https://linkedin.com/in/your-profile" /><label for="edit-tiktok">TikTok</label><input id="edit-tiktok" name="tiktok" type="url" placeholder="https://tiktok.com/@your-profile" /><label for="edit-website">Website button</label><input id="edit-website" name="website" type="url" placeholder="https://tapx.lk" /><label for="edit-company">Company name</label><input id="edit-company" name="company" type="text" maxlength="80" /><label for="edit-company-website">Company website</label><input id="edit-company-website" name="companyWebsite" type="url" placeholder="https://tapx.lk" /><label for="edit-company-description">Company description</label><textarea id="edit-company-description" name="companyDescription" rows="4" maxlength="1600"></textarea><label class="checkbox-label"><input id="edit-show-company" name="showCompany" type="checkbox" />Show my company on my profile</label><label class="button button-soft gallery-picker" for="gallery-input">Add company photos</label><input class="visually-hidden" id="gallery-input" name="gallery" type="file" accept="image/*" multiple /><div class="editor-gallery" id="editor-gallery"></div></section>
+          <p class="form-error" id="editor-error" role="status"></p><button class="button button-red save-changes" type="submit">Save changes</button><p class="editor-note">Changes are saved on this device for this demo.</p><a class="editor-back" href="#profile">Back to my profile</a>
+        </form>
+      </section>
     </main>
-
-    <dialog id="contact-dialog" aria-labelledby="panel-title">
-      <div class="sheet">
-        <button class="handle" id="sheet-handle" aria-label="Swipe down or tap to close contact details"><span></span></button>
-        <div class="panel-heading">
-          <div><p class="eyebrow">LET'S KEEP IN TOUCH</p><h2 id="panel-title">Contact details<span class="accent-period">.</span></h2></div>
-          <button id="close-contact" class="close" aria-label="Close contact details">&times;</button>
-        </div>
-        <div class="sheet-profile">
-          <img class="mini-portrait" data-portrait src="assets/omal-profile.png" alt="" width="52" height="52" />
-          <div><strong id="sheet-name">Omal Bopage</strong><span id="sheet-role">Co-Founder · Tapx (Pvt) Ltd</span></div>
-          <span class="profile-rule" aria-hidden="true"></span>
-        </div>
-        <div class="actions">
-          <button id="save-contact"><span data-icon="download"></span>Save to contacts<span class="button-arrow" aria-hidden="true">↗</span></button>
-          <button id="connect" aria-label="Connect on WhatsApp"><span data-icon="whatsapp"></span>Connect</button>
-          <button id="share"><span data-icon="share"></span>Share profile</button>
-        </div>
-        <p class="section-label">CONTACT INFORMATION</p>
-        <div class="contact-list" id="contact-list"></div>
-        <div class="tabs" role="tablist" aria-label="Profile information">
-          <button role="tab" id="tab-about" aria-controls="about" aria-selected="true">About</button>
-          <button role="tab" id="tab-company" aria-controls="company" aria-selected="false" tabindex="-1">Company</button>
-          <button role="tab" id="tab-gallery" aria-controls="gallery" aria-selected="false" tabindex="-1">Gallery</button>
-        </div>
-        <section class="tab-content" role="tabpanel" id="about" aria-labelledby="tab-about" tabindex="0"></section>
-        <section class="tab-content" role="tabpanel" id="company" aria-labelledby="tab-company" tabindex="0" hidden></section>
-        <section class="tab-content gallery" role="tabpanel" id="gallery" aria-labelledby="tab-gallery" tabindex="0" hidden></section>
-        <p class="sheet-footer">One card. Every connection.</p>
-      </div>
-    </dialog>
-    <div class="toast" id="toast" role="status"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="profile.js"></script>
     <script src="app.js"></script>
   </body>

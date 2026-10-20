@@ -1,19 +1,17 @@
-﻿# Omal Bopage — Digital Business Card
+﻿# Omal Bopage — Personal Digital Profile
 
-A phone-first digital card built around a large full-color portrait, a navy (`#061e3f`) identity section, white contact actions, and restrained red (`#f32230`) accents. The exact attached portrait and original Tapx logo are included as local assets. Save Contact and WhatsApp are available directly on the profile. Swipe up or tap the bottom cue for a white contact sheet with a profile summary, sharing, and About / Company / Gallery tabs.
+A static, mobile-first implementation of the seven-screen design supplied in the PDF: personal contact page, social links, company, gallery, products, owner access, and profile editor. The two profile pages support swipe and tap navigation. Company and product content stays separate from Omal's personal Call, Email, and WhatsApp actions.
 
-## Preview
-Open `index.html` in a browser. No installation or build step is needed. Share uses the browser share menu or clipboard when served over HTTP(S); it explains the limitation when opened as a local file.
+## Use
 
-Swipe up from the portrait, profile, or bottom cue to explore. Keyboard users can focus the cue and press Enter or Space. Swipe down on the sheet to close it when its content is at the top; scrolling through longer details remains available. The top handle, close button, Escape, and backdrop also close it. Connect uses a monochrome WhatsApp icon. When the profile is taller than the viewport, the page scrolls naturally and the bottom cue remains the swipe target. The layout supports phone safe areas, pinch zoom, and reduced-motion preferences.
+Open `index.html`. No installation or build step is required. Contact links open the phone, email, WhatsApp, and website handlers; Save Contact downloads a `.vcf` file. The website button opens `https://tapx.lk/`.
 
-## Personalize
-Edit `profile.js` to update your details, image paths, social URLs, and gallery entries. Empty social URLs, website, and address are hidden until supplied. The current bio is draft copy.
+Edit Profile is a frontend demo. Enter the personal email listed in `profile.js` to open the editor. There is no email delivery, verified login, or server account. Saved edits, profile photos, social URLs, company information, and gallery changes persist in this browser's local storage only. They do not update other devices or visitors. The sign-in screen and editor make the demo storage scope visible.
 
-The supplied phone number is normalized to Sri Lanka’s +94 format for WhatsApp and vCard; the page displays the local number. Confirm before publishing.
+## Content
 
-## Remaining content
-Optional website/address, gallery photos, and final company copy. Your new portrait, original logo, and Facebook, Instagram, and TikTok links are already included. `assets/omal-profile.png` and `assets/tapx-logo.png` are the original supplied images. The older portrait and vector logo remain in assets but are no longer used by the page.
+Defaults are in `profile.js`. Personal phone, email, WhatsApp, Facebook, Instagram, and TikTok details are retained. LinkedIn is intentionally unlinked until the owner provides a URL; it can be added through Edit Profile → Manage.
 
-This is a static frontend demo. Hosting and an NFC tag pointing to its public URL are separate steps. No backend, analytics, or contact submission is included. The reference video and inspection screenshots are excluded from Git.
+The gallery's `assets/tapx-card-navy.png` and `assets/tapx-card-classic.png` were extracted from the supplied design PDF. The existing original portrait and Tapx logo are reused. Add or remove up to eight company images in the demo editor.
 
+Clear the `tapx.personal-profile.v1` local-storage entry to restore the defaults in `profile.js`. A production version would need a backend for verified email sign-in and edits shared across devices.
