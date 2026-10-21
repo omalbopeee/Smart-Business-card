@@ -1,9 +1,8 @@
 ﻿const $ = (id) => document.getElementById(id);
-const baseProfile = JSON.parse(JSON.stringify(window.PROFILE));
-const copy = (value) => JSON.parse(JSON.stringify(value));
+const baseProfile = window.PROFILE;
 const routes = new Set(["profile", "socials", "company", "gallery", "products"]);
 const socialNames = { facebook: "Facebook", instagram: "Instagram", linkedin: "LinkedIn", tiktok: "TikTok" };
-const profile = copy(baseProfile);
+const profile = JSON.parse(JSON.stringify(baseProfile));
 
 const paths = {
   save: '<circle cx="9" cy="6" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M19 8v10m-3-3 3 3 3-3"/>',
