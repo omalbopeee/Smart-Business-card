@@ -1,23 +1,16 @@
 ﻿const $ = (id) => document.getElementById(id);
-const STORAGE_KEY = "tapx.personal-profile.v1";
-const OWNER_KEY = "tapx.demo-owner.v1";
 const baseProfile = JSON.parse(JSON.stringify(window.PROFILE));
 const copy = (value) => JSON.parse(JSON.stringify(value));
-const routes = new Set(["profile", "socials", "company", "gallery", "products", "signin", "editor"]);
+const routes = new Set(["profile", "socials", "company", "gallery", "products"]);
 const socialNames = { facebook: "Facebook", instagram: "Instagram", linkedin: "LinkedIn", tiktok: "TikTok" };
-let profile = loadProfile();
-let editorDraft = null;
-let imageJobs = 0;
-let ownerSession = false;
-try { ownerSession = sessionStorage.getItem(OWNER_KEY) === "1"; } catch {}
+const profile = copy(baseProfile);
 
 const paths = {
-  edit: '<path d="m15 4 5 5M4 16l-1 5 5-1L21 7a2 2 0 0 0-5-5Z"/><path d="m13 6 5 5"/>',
   save: '<circle cx="9" cy="6" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M19 8v10m-3-3 3 3 3-3"/>',
   phone: '<path d="m7 3 3 5-3 2a14 14 0 0 0 7 7l2-3 5 3-1 4C11 23 1 13 3 4Z"/>',
   email: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/>',
   globe: '<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
-  whatsapp: '<path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.5L3 20.5l1.3-4.8a8.5 8.5 0 1 1 16.2-4Z"/><path d="m8.2 7.2 1.4 2.7-1.2 1.1a8.5 8.5 0 0 0 4.6 4.6l1.1-1.2 2.7 1.4c-.2 1.1-1 1.7-2.1 1.7-4.2-.3-8.3-4.4-8.6-8.6 0-1.1.6-1.9 1.7-2.1Z"/>',
+  whatsapp: '<path fill="currentColor" stroke="none" fill-rule="evenodd" d="M12 2a10 10 0 0 0-8.64 15.04L2 22l5.1-1.34A10 10 0 1 0 12 2Zm0 1.85a8.15 8.15 0 0 1 0 16.3 8.1 8.1 0 0 1-4.16-1.14l-.35-.21-2.84.75.76-2.77-.23-.37A8.15 8.15 0 0 1 12 3.85Z"/><path fill="currentColor" stroke="none" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.06 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.27.49 1.7.62.71.23 1.35.2 1.86.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35Z"/>',
   facebook: '<path fill="currentColor" stroke="none" d="M14.4 22v-8.6h2.9l.4-3.4h-3.3V7.8c0-1 .3-1.7 1.7-1.7h1.8V3.2c-.3 0-1.4-.2-2.6-.2-2.6 0-4.4 1.6-4.4 4.5V10H8v3.4h2.9V22Z"/>',
   instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17 6h.01"/>',
   linkedin: '<circle cx="5" cy="5" r="1.2" fill="currentColor"/><path d="M5 9v11M10 20V9m0 5c0-6 9-6 9 0v6" stroke-width="3"/>',
@@ -32,22 +25,6 @@ function icon(name) {
 }
 document.querySelectorAll("[data-icon]").forEach((element) => { element.innerHTML = icon(element.dataset.icon); });
 
-function loadProfile() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (!saved || typeof saved !== "object") return copy(baseProfile);
-    const result = copy(baseProfile);
-    for (const key of Object.keys(baseProfile)) {
-      if (typeof baseProfile[key] === "string" && typeof saved[key] === "string") result[key] = saved[key];
-      if (typeof baseProfile[key] === "boolean" && typeof saved[key] === "boolean") result[key] = saved[key];
-    }
-    if (saved.socials && typeof saved.socials === "object") {
-      for (const name of Object.keys(result.socials)) if (typeof saved.socials[name] === "string") result.socials[name] = saved.socials[name];
-    }
-    if (Array.isArray(saved.gallery)) result.gallery = saved.gallery.filter((item) => item && typeof item.src === "string").slice(0, 8).map((item) => ({ src: item.src, title: String(item.title || "Company photo"), alt: String(item.alt || item.title || "Company photo") }));
-    return result;
-  } catch { return copy(baseProfile); }
-}
 function webUrl(value) {
   try {
     const url = new URL(value);
@@ -175,17 +152,12 @@ function navigate(route) {
   location.hash = route;
 }
 function renderRoute() {
-  let route = currentRoute();
-  if (route === "editor" && !ownerSession) {
-    route = "signin";
-    history.replaceState(null, "", "#signin");
-  }
+  const route = currentRoute();
   for (const screen of document.querySelectorAll(".screen")) {
     const active = screen.id === `screen-${route}`;
     screen.hidden = !active;
     screen.classList.toggle("route-enter", active);
   }
-  if (route === "editor") fillEditor();
   const active = $(`screen-${route}`);
   active.tabIndex = -1;
   active.focus({ preventScroll: true });
@@ -275,116 +247,6 @@ function downloadContact() {
   toast("Contact downloaded. Open it to add it to your contacts.");
 }
 document.querySelectorAll('[data-action="save-contact"]').forEach((button) => { button.onclick = downloadContact; });
-
-$("owner-form").addEventListener("submit", (event) => {
-  event.preventDefault();
-  const email = $("owner-email").value.trim().toLowerCase();
-  if (profile.email && email !== profile.email.trim().toLowerCase()) {
-    $("owner-error").textContent = "Use the email address on this profile to open the demo editor.";
-    return;
-  }
-  $("owner-error").textContent = "";
-  ownerSession = true;
-  try { sessionStorage.setItem(OWNER_KEY, "1"); } catch {}
-  navigate("editor");
-});
-function fillEditor() {
-  editorDraft = copy(profile);
-  const values = {
-    "edit-name": profile.name, "edit-title": profile.title, "edit-about": profile.about,
-    "edit-phone": profile.phone, "edit-email": profile.email, "edit-whatsapp": profile.whatsapp,
-    "edit-facebook": profile.socials.facebook, "edit-instagram": profile.socials.instagram,
-    "edit-linkedin": profile.socials.linkedin, "edit-tiktok": profile.socials.tiktok,
-    "edit-website": profile.website, "edit-company": profile.company,
-    "edit-company-website": profile.companyWebsite, "edit-company-description": profile.companyDescription,
-  };
-  for (const [id, value] of Object.entries(values)) $(id).value = value || "";
-  $("edit-show-company").checked = profile.showCompany;
-  $("editor-photo").src = imageUrl(profile.portrait) || baseProfile.portrait;
-  $("photo-input").value = ""; $("gallery-input").value = "";
-  $("editor-error").textContent = "";
-  $("manage-fields").hidden = true;
-  $("toggle-manage").setAttribute("aria-expanded", "false");
-  renderEditorGallery();
-}
-$("toggle-manage").addEventListener("click", () => {
-  const expanded = $("toggle-manage").getAttribute("aria-expanded") !== "true";
-  $("toggle-manage").setAttribute("aria-expanded", String(expanded));
-  $("manage-fields").hidden = !expanded;
-  if (expanded) $("manage-fields").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
-});
-function renderEditorGallery() {
-  $("editor-gallery").replaceChildren();
-  if (!editorDraft) return;
-  editorDraft.gallery.forEach((item, index) => {
-    const figure = document.createElement("figure");
-    const image = new Image(); image.src = imageUrl(item.src); image.alt = item.title || "Company photo";
-    const remove = document.createElement("button"); remove.type = "button"; remove.textContent = "×"; remove.setAttribute("aria-label", `Remove ${item.title || "company photo"}`);
-    remove.onclick = () => { editorDraft.gallery.splice(index, 1); renderEditorGallery(); };
-    const caption = document.createElement("input"); caption.type = "text"; caption.value = item.title || ""; caption.placeholder = "Photo caption"; caption.setAttribute("aria-label", "Photo caption"); caption.maxLength = 100;
-    caption.oninput = () => { item.title = caption.value; item.alt = caption.value || "Company photo"; };
-    figure.append(image, remove, caption); $("editor-gallery").append(figure);
-  });
-}
-function updateImageBusy() {
-  document.querySelectorAll('button[form="profile-form"], .save-changes').forEach((button) => { button.disabled = imageJobs > 0; });
-}
-async function readImage(file, size) {
-  if (!file.type.startsWith("image/")) throw new Error("Please choose an image file.");
-  if (file.size > 10 * 1024 * 1024) throw new Error("Please choose an image smaller than 10 MB.");
-  const url = URL.createObjectURL(file);
-  try {
-    const image = new Image();
-    await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = () => reject(new Error("This image could not be opened. Please try a JPG, PNG, or WebP image.")); image.src = url; });
-    const scale = Math.min(1, size / Math.max(image.naturalWidth, image.naturalHeight));
-    const canvas = document.createElement("canvas"); canvas.width = Math.max(1, Math.round(image.naturalWidth * scale)); canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-    const context = canvas.getContext("2d"); context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL("image/webp", .88);
-  } finally { URL.revokeObjectURL(url); }
-}
-$("photo-input").addEventListener("change", async () => {
-  const file = $("photo-input").files[0];
-  if (!file || !editorDraft) return;
-  const draft = editorDraft; imageJobs++; updateImageBusy();
-  try { const data = await readImage(file, 1024); if (editorDraft === draft) { draft.portrait = data; $("editor-photo").src = data; } }
-  catch (error) { $("editor-error").textContent = error.message; }
-  finally { imageJobs--; updateImageBusy(); }
-});
-$("gallery-input").addEventListener("change", async () => {
-  if (!editorDraft) return;
-  const room = Math.max(0, 8 - editorDraft.gallery.length);
-  const files = [...$("gallery-input").files].slice(0, room);
-  if (!files.length) { toast("You can add up to 8 company photos."); return; }
-  const draft = editorDraft; imageJobs++; updateImageBusy();
-  try {
-    const images = await Promise.all(files.map(async (file) => ({ src: await readImage(file, 1000), title: file.name.replace(/\.[^.]+$/, ""), alt: file.name.replace(/\.[^.]+$/, "") })));
-    if (editorDraft === draft) { draft.gallery.push(...images); renderEditorGallery(); }
-  } catch (error) { $("editor-error").textContent = error.message; }
-  finally { imageJobs--; updateImageBusy(); }
-});
-$("profile-form").addEventListener("submit", (event) => {
-  event.preventDefault();
-  if (!editorDraft || imageJobs) return;
-  const value = (id) => $(id).value.trim();
-  const next = copy(editorDraft);
-  next.name = value("edit-name"); next.title = value("edit-title"); next.about = value("edit-about");
-  next.phone = phoneValue(value("edit-phone")); next.phoneDisplay = value("edit-phone");
-  next.email = value("edit-email"); next.whatsapp = phoneValue(value("edit-whatsapp"));
-  next.website = value("edit-website"); next.company = value("edit-company");
-  next.companyWebsite = value("edit-company-website"); next.companyDescription = value("edit-company-description");
-  next.showCompany = $("edit-show-company").checked;
-  for (const name of Object.keys(socialNames)) next.socials[name] = value("edit-" + name);
-  const invalidPhone = [next.phone, next.whatsapp].some((phone) => phone && !/^\+?\d{7,15}$/.test(phone));
-  if (invalidPhone) { $("editor-error").textContent = "Enter a valid phone or WhatsApp number, including its country code."; return; }
-  const invalidUrl = [next.website, next.companyWebsite, ...Object.values(next.socials)].some((url) => url && !webUrl(url));
-  if (invalidUrl) { $("editor-error").textContent = "Use a full http:// or https:// address for each link."; return; }
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); }
-  catch { $("editor-error").textContent = "The browser couldn't save these changes. Try fewer or smaller photos, or enable browser storage."; return; }
-  profile = next;
-  renderProfile();
-  navigate("profile");
-  toast("Profile saved in this browser.");
-});
 
 renderProfile();
 renderRoute();
