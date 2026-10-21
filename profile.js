@@ -20,7 +20,7 @@
   socials: {
     facebook: "https://www.facebook.com/share/1KTcXatjhG/?mibextid=wwXIfr",
     instagram: "https://www.instagram.com/_omal__bopeee_/",
-    linkedin: "",
+    linkedin: "https://www.linkedin.com/in/omal-bopeeee/",
     tiktok: "https://www.tiktok.com/@omal_bopeeeee",
   },
   gallery: [

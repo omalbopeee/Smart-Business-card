@@ -8,7 +8,7 @@ Open `index.html`. No installation or build step is required. Contact links open
 
 ## Content
 
-Profile content is configured in `profile.js`. Personal phone, email, WhatsApp, Facebook, Instagram, and TikTok details are retained. LinkedIn is intentionally unlinked until a URL is added to `socials.linkedin`.
+Profile content is configured in `profile.js`, including personal phone, email, WhatsApp, Facebook, Instagram, LinkedIn, and TikTok links.
 
 The gallery's `assets/tapx-card-navy.png` and `assets/tapx-card-classic.png` were extracted from the supplied design PDF. The existing original portrait and Tapx logo are reused. Update the `gallery` array in `profile.js` to change company images and captions.
 
